@@ -17,6 +17,10 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
     public FormMSKaryawan() {
         initComponents();
     }
+    
+    public void showData(){
+        Object[] row = {"ID", "NAMA PEGAWAI", "ALAMAT", "TELEPON", "JABATAN", "JENIS KELAMIN"};
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
