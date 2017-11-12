@@ -13,6 +13,8 @@ public class Karyawan {
     
     private int id;
     
+    private String NIP;
+    
     private String fullname;
     
     private String startWork;
@@ -23,15 +25,15 @@ public class Karyawan {
     
     private String DOB;
     
-    private int gender;
+    private String gender;
     
-    private int marital;
+    private String marital;
     
-    private int status;
+    private String status;
     
     private int dept;
     
-    private int position;
+    private String position;
     
     private String createdAt;
     
@@ -40,6 +42,15 @@ public class Karyawan {
     public Karyawan(){
         
     }
+    
+    public void setNIP(String NIP){
+        this.NIP = NIP;
+    }
+    
+    public String getNIP(){
+        return this.NIP;
+    }
+    
 
     public int getId() {
         return id;
@@ -89,27 +100,27 @@ public class Karyawan {
         this.DOB = DOB;
     }
 
-    public int getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(int gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public int getMarital() {
+    public String getMarital() {
         return marital;
     }
 
-    public void setMarital(int marital) {
+    public void setMarital(String marital) {
         this.marital = marital;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -129,11 +140,11 @@ public class Karyawan {
         this.createdAt = createdAt;
     }
 
-    public int getPosition() {
+    public String getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(String position) {
         this.position = position;
     }
 

@@ -20,7 +20,7 @@ public class DBHelper {
     public ArrayList<Karyawan> getKaryawan(){
         ArrayList<Karyawan> returns = new ArrayList<>();
         java.sql.Connection conn = new DBConn().connect();
-        String sql = "Select * From Karyawan order by id asc";
+        String sql = "SELECT * FROM mskaryawan ORDER BY id ASC";
         java.sql.Statement stmt;
         try {
             stmt = conn.createStatement();
@@ -32,11 +32,11 @@ public class DBHelper {
                 String address      = result.getString("address");
                 String phone        = result.getString("phone");
                 String dob          = result.getString("dob");
-                int gender          = result.getInt("gender");
-                int marital         = result.getInt("marital");
-                int status          = result.getInt("status");
+                String gender       = result.getString("gender");
+                String marital      = result.getString("marital");
+                String status       = result.getString("status");
                 int dept            = result.getInt("dept");
-                int position        = result.getInt("position");
+                String position     = result.getString("position");
                 String createdAt    = result.getString("created_at");
                 String updatedAt    = result.getString("updated_at");
                 
@@ -59,5 +59,44 @@ public class DBHelper {
             Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
         return returns;
+    }
+    
+    public void insertKaryawan(Karyawan kry){
+        java.sql.Connection conn = new DBConn().connect();
+        try {
+            String sql = "insert into mskaryawan("
+                        + "nip,"
+                        + "fullname,"
+                        + "start_work,"
+                        + "address,"
+                        + "phone,"
+                        + "dob, "
+                        + "gender, "
+                        + "marital,"
+                        + "status,"
+                        + "dept, "
+                        + "position,"
+                        + "created_at,"
+                        + "updated_at) "
+                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, kry.getNIP());
+            stmt.setString(2, kry.getFullname());
+            stmt.setString(3, kry.getStartWork());
+            stmt.setString(4, kry.getAddress());
+            stmt.setString(5, kry.getPhone());
+            stmt.setString(6, kry.getDOB());
+            stmt.setString(7, kry.getGender());
+            stmt.setString(8, kry.getMarital());
+            stmt.setString(9, kry.getStatus());
+            stmt.setInt(10, kry.getDept());
+            stmt.setString(11, kry.getPosition());
+            stmt.setString(12, kry.getCreatedAt());
+            stmt.setString(13, kry.getUpdatedAt());
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -5,21 +5,147 @@
  */
 package me.fmy.spk.form;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import me.fmy.spk.models.Karyawan;
+import me.fmy.spk.repository.DBHelper;
+
 /**
  *
  * @author WebDev
  */
 public class FormMSKaryawan extends javax.swing.JInternalFrame {
+    
+    DBHelper mDBHelper;
+    DefaultTableModel tblModel;
+    
 
     /**
      * Creates new form FormMSKaryawan
      */
     public FormMSKaryawan() {
         initComponents();
+        mDBHelper = new DBHelper();
+        showData();
+        formViewMode();
     }
     
-    public void showData(){
-        Object[] row = {"ID", "NAMA PEGAWAI", "ALAMAT", "TELEPON", "JABATAN", "JENIS KELAMIN"};
+    private void showData(){
+        Object[] rows = {"ID", "NAMA PEGAWAI", "ALAMAT", "TELEPON", "JABATAN", "JENIS KELAMIN"};
+        tblModel = new DefaultTableModel(null,rows );
+        JTblKaryawan.setModel(tblModel);
+        ArrayList<Karyawan> krys = mDBHelper.getKaryawan();
+        for(int i=0; i<krys.size(); i++ ){
+            Karyawan kry = krys.get(i);
+            String[] data = {String.valueOf(kry.getId()), kry.getFullname(), kry.getAddress(), kry.getPhone(), "Administrator", "Wanita"}; 
+            tblModel.addRow(data);
+        }
+    }
+    
+    private void formInputMode(){
+        jTxtIDPegawai.setEnabled(true);
+        jTxtAddress.setEnabled(true);
+        jTxtEmployeeName.setEnabled(true);
+        jTxtPhone.setEnabled(true);
+        jCMBDept.setEnabled(true);
+        jCMBPos.setEnabled(true);
+        jRBGenderF.setEnabled(true);
+        jRBGenderM.setEnabled(true);
+        jRBMaritalK.setEnabled(true);
+        jRBMaritalL.setEnabled(true);
+        jRBMaritalJD.setEnabled(true); 
+        jRBStatusT.setEnabled(true);
+        jRBStatusK.setEnabled(true);
+        jPanelSave.setVisible(true);
+        jPanelMainButtonGroup.setVisible(false);
+    }
+    
+    private void formViewMode(){
+        jTxtIDPegawai.setEnabled(false);
+        jTxtAddress.setEnabled(false);
+        jTxtEmployeeName.setEnabled(false);
+        jTxtPhone.setEnabled(false);
+        jCMBDept.setEnabled(false);
+        jCMBPos.setEnabled(false);
+        jRBGenderF.setEnabled(false);
+        jRBGenderM.setEnabled(false);
+        jRBMaritalK.setEnabled(false);
+        jRBMaritalL.setEnabled(false);
+        jRBMaritalJD.setEnabled(false);  
+        jRBStatusT.setEnabled(false);
+        jRBStatusK.setEnabled(false);
+        jPanelSave.setVisible(false);
+        jPanelMainButtonGroup.setVisible(true);
+    }
+    
+    private void clearForm(){
+        jTxtIDPegawai.setText("");
+        jTxtAddress.setText("");
+        jTxtEmployeeName.setText("");
+        jTxtPhone.setText("");
+        jCMBDept.setSelectedIndex(0);
+        jCMBPos.setSelectedIndex(0);
+        jRBGenderF.setSelected(false);
+        jRBGenderM.setSelected(false);
+        jRBMaritalK.setSelected(false);
+        jRBMaritalL.setSelected(false);
+        jRBMaritalJD.setSelected(false);  
+        jRBStatusT.setSelected(false);
+        jRBStatusK.setSelected(false);
+    }
+    
+    private void insertKaryawan(){
+        String NIP          = jTxtIDPegawai.getText();
+        String fullname     = jTxtEmployeeName.getText();
+        String phone        = jTxtPhone.getText();
+        String address      = jTxtAddress.getText();
+        String dept         = jCMBDept.getSelectedItem().toString();
+        String pos          = jCMBPos.getSelectedItem().toString();
+        
+        String Gender;
+        if(jRBGenderM.isSelected()){
+            Gender = "Pria";
+        } else if(jRBGenderF.isSelected()){
+            Gender = "Wanita";
+        } else {
+            Gender = "Pria";
+        }
+        
+        String Marital;
+        if(jRBMaritalK.isSelected()){
+            Marital = "Kawin";
+        } else if(jRBMaritalL.isSelected()){
+            Marital = "Single";
+        } else if(jRBMaritalJD.isSelected()){
+            Marital = "Janda / Duda";
+        } else {
+            Marital = "Single";
+        }
+        
+        String Status;
+        if(jRBStatusK.isSelected()){
+            Status = "Tetap";
+        } else if(jRBStatusT.isSelected()){
+            Status = "Kontrak";
+        } else {
+            Status = "Tetap";
+        }
+        
+        Karyawan kry = new Karyawan();
+        kry.setNIP(NIP);
+        kry.setFullname(fullname);
+        kry.setStartWork("2017-12-11");
+        kry.setDOB("1988-11-22");
+        kry.setAddress(address);
+        kry.setPhone(fullname);
+        kry.setGender(Gender);
+        kry.setMarital(Marital);
+        kry.setStatus(Status);
+        kry.setDept(1);
+        kry.setPosition(pos);
+        kry.setCreatedAt("2017-11-12 00:00:00");
+        kry.setUpdatedAt("2017-11-12 00:00:00");
+        mDBHelper.insertKaryawan(kry);
     }
 
     /**
@@ -33,51 +159,54 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        jTxtIDPegawai = new javax.swing.JTextField();
+        jTxtEmployeeName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        jTxtAddress = new javax.swing.JTextField();
+        jTxtPhone = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
+        jRBGenderM = new javax.swing.JRadioButton();
+        jRBGenderF = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        JTblKaryawan = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        jCMBPos = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
+        jCMBDept = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        jRadioButton4 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
-        jRadioButton5 = new javax.swing.JRadioButton();
+        jRBMaritalK = new javax.swing.JRadioButton();
+        jRBMaritalL = new javax.swing.JRadioButton();
+        jRBMaritalJD = new javax.swing.JRadioButton();
         jLabel10 = new javax.swing.JLabel();
-        jRadioButton6 = new javax.swing.JRadioButton();
-        jRadioButton7 = new javax.swing.JRadioButton();
+        jRBStatusT = new javax.swing.JRadioButton();
+        jRBStatusK = new javax.swing.JRadioButton();
+        jPanelSave = new javax.swing.JPanel();
+        jBtnCancel = new javax.swing.JButton();
+        jBtnSave = new javax.swing.JButton();
+        jPanelMainButtonGroup = new javax.swing.JPanel();
+        jBtnAddnew = new javax.swing.JButton();
+        jBtnUpdate = new javax.swing.JButton();
+        jBtnDelete = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel2.setText("ID Pegawai");
         jLabel2.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jTxtIDPegawai.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jTxtIDPegawaiActionPerformed(evt);
             }
         });
 
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jTxtEmployeeName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                jTxtEmployeeNameActionPerformed(evt);
             }
         });
 
@@ -87,15 +216,15 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         jLabel4.setText("Alamat");
         jLabel4.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        jTxtAddress.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                jTxtAddressActionPerformed(evt);
             }
         });
 
-        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+        jTxtPhone.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField4ActionPerformed(evt);
+                jTxtPhoneActionPerformed(evt);
             }
         });
 
@@ -105,17 +234,17 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         jLabel7.setText("Jenis Kelamin");
         jLabel7.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jRadioButton1.setText("Laki - Laki");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        jRBGenderM.setText("Laki - Laki");
+        jRBGenderM.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                jRBGenderMActionPerformed(evt);
             }
         });
 
-        jRadioButton2.setText("Perempuan");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        jRBGenderF.setText("Perempuan");
+        jRBGenderF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                jRBGenderFActionPerformed(evt);
             }
         });
 
@@ -135,20 +264,20 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jTxtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addGap(18, 18, 18)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jTxtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(29, 29, 29)
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
-                        .addComponent(jRadioButton1)
+                        .addComponent(jRBGenderM)
                         .addGap(18, 18, 18)
-                        .addComponent(jRadioButton2)))
+                        .addComponent(jRBGenderF)))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -156,39 +285,37 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2)
+                    .addComponent(jTxtEmployeeName)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTxtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(12, 12, 12)
                         .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTxtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jRadioButton1)
-                        .addComponent(jRadioButton2)))
+                        .addComponent(jRBGenderM)
+                        .addComponent(jRBGenderF)))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Tambah");
-
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        JTblKaryawan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -199,83 +326,75 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(JTblKaryawan);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(25, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 708, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 793, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(21, 21, 21))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
+                .addGap(13, 13, 13)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
         );
-
-        jButton2.setText("Ubah");
-
-        jButton3.setText("Hapus");
-
-        jButton4.setText("Batal");
-
-        jButton5.setText("Keluar");
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel5.setText("Jabatan");
         jLabel5.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCMBPos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel8.setText("Dept.");
         jLabel8.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jCMBDept.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel9.setText("Status Perkawinan");
         jLabel9.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jRadioButton4.setText("Kawin");
-        jRadioButton4.addActionListener(new java.awt.event.ActionListener() {
+        jRBMaritalK.setText("Kawin");
+        jRBMaritalK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton4ActionPerformed(evt);
+                jRBMaritalKActionPerformed(evt);
             }
         });
 
-        jRadioButton3.setText("Lajang");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        jRBMaritalL.setText("Lajang");
+        jRBMaritalL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                jRBMaritalLActionPerformed(evt);
             }
         });
 
-        jRadioButton5.setText("Janda / Duda");
-        jRadioButton5.addActionListener(new java.awt.event.ActionListener() {
+        jRBMaritalJD.setText("Janda / Duda");
+        jRBMaritalJD.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton5ActionPerformed(evt);
+                jRBMaritalJDActionPerformed(evt);
             }
         });
 
         jLabel10.setText("Status Karyawan");
         jLabel10.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jRadioButton6.setText("Tetap");
-        jRadioButton6.addActionListener(new java.awt.event.ActionListener() {
+        jRBStatusT.setText("Tetap");
+        jRBStatusT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton6ActionPerformed(evt);
+                jRBStatusTActionPerformed(evt);
             }
         });
 
-        jRadioButton7.setText("Kontrak");
-        jRadioButton7.addActionListener(new java.awt.event.ActionListener() {
+        jRBStatusK.setText("Kontrak");
+        jRBStatusK.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton7ActionPerformed(evt);
+                jRBStatusKActionPerformed(evt);
             }
         });
 
@@ -290,25 +409,25 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                         .addGap(10, 10, 10)
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
-                        .addComponent(jRadioButton6)
+                        .addComponent(jRBStatusT)
                         .addGap(10, 10, 10)
-                        .addComponent(jRadioButton7))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jComboBox1, 0, 203, Short.MAX_VALUE)
-                                .addComponent(jComboBox2, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jRadioButton3)
-                                .addGap(10, 10, 10)
-                                .addComponent(jRadioButton4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jRadioButton5)))))
+                        .addComponent(jRBStatusK))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jCMBDept, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(18, 18, 18)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel3Layout.createSequentialGroup()
+                                    .addComponent(jRBMaritalL)
+                                    .addGap(10, 10, 10)
+                                    .addComponent(jRBMaritalK)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jRBMaritalJD))
+                                .addComponent(jCMBPos, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(60, 60, 60))
         );
         jPanel3Layout.setVerticalGroup(
@@ -316,24 +435,99 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCMBDept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jCMBPos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton3)
-                    .addComponent(jRadioButton4)
-                    .addComponent(jRadioButton5))
+                    .addComponent(jRBMaritalL)
+                    .addComponent(jRBMaritalK)
+                    .addComponent(jRBMaritalJD))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jRadioButton6)
-                    .addComponent(jRadioButton7))
+                    .addComponent(jRBStatusT)
+                    .addComponent(jRBStatusK))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jBtnCancel.setText("Batal");
+        jBtnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnCancelActionPerformed(evt);
+            }
+        });
+
+        jBtnSave.setText("Simpan");
+        jBtnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnSaveActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelSaveLayout = new javax.swing.GroupLayout(jPanelSave);
+        jPanelSave.setLayout(jPanelSaveLayout);
+        jPanelSaveLayout.setHorizontalGroup(
+            jPanelSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSaveLayout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addComponent(jBtnSave)
+                .addGap(18, 18, 18)
+                .addComponent(jBtnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanelSaveLayout.setVerticalGroup(
+            jPanelSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSaveLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSaveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBtnCancel)
+                    .addComponent(jBtnSave))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        jBtnAddnew.setText("Tambah");
+        jBtnAddnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnAddnewActionPerformed(evt);
+            }
+        });
+
+        jBtnUpdate.setText("Ubah");
+
+        jBtnDelete.setText("Hapus");
+
+        jButton5.setText("Keluar");
+
+        javax.swing.GroupLayout jPanelMainButtonGroupLayout = new javax.swing.GroupLayout(jPanelMainButtonGroup);
+        jPanelMainButtonGroup.setLayout(jPanelMainButtonGroupLayout);
+        jPanelMainButtonGroupLayout.setHorizontalGroup(
+            jPanelMainButtonGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMainButtonGroupLayout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jBtnAddnew, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBtnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jBtnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanelMainButtonGroupLayout.setVerticalGroup(
+            jPanelMainButtonGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelMainButtonGroupLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanelMainButtonGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBtnAddnew)
+                    .addComponent(jBtnUpdate)
+                    .addComponent(jBtnDelete)
+                    .addComponent(jButton5))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -342,26 +536,19 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanelSave, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(92, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(50, 50, 50)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelMainButtonGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(59, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72))))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -370,74 +557,86 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(51, 51, 51)
+                .addGap(18, 18, 18)
+                .addComponent(jPanelSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(21, 21, 21)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
-                .addContainerGap(512, Short.MAX_VALUE))
+                .addGap(47, 47, 47)
+                .addComponent(jPanelMainButtonGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(392, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTxtIDPegawaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtIDPegawaiActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTxtIDPegawaiActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTxtEmployeeNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtEmployeeNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jTxtEmployeeNameActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void jTxtAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtAddressActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_jTxtAddressActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void jTxtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtPhoneActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_jTxtPhoneActionPerformed
 
-    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+    private void jRBGenderMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBGenderMActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton1ActionPerformed
+    }//GEN-LAST:event_jRBGenderMActionPerformed
 
-    private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
+    private void jRBGenderFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBGenderFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton2ActionPerformed
+    }//GEN-LAST:event_jRBGenderFActionPerformed
 
-    private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
+    private void jRBMaritalLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBMaritalLActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton3ActionPerformed
+    }//GEN-LAST:event_jRBMaritalLActionPerformed
 
-    private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
+    private void jRBMaritalKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBMaritalKActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton4ActionPerformed
+    }//GEN-LAST:event_jRBMaritalKActionPerformed
 
-    private void jRadioButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton5ActionPerformed
+    private void jRBMaritalJDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBMaritalJDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton5ActionPerformed
+    }//GEN-LAST:event_jRBMaritalJDActionPerformed
 
-    private void jRadioButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton6ActionPerformed
+    private void jRBStatusTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBStatusTActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton6ActionPerformed
+    }//GEN-LAST:event_jRBStatusTActionPerformed
 
-    private void jRadioButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton7ActionPerformed
+    private void jRBStatusKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRBStatusKActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jRadioButton7ActionPerformed
+    }//GEN-LAST:event_jRBStatusKActionPerformed
+
+    private void jBtnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnCancelActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBtnCancelActionPerformed
+
+    private void jBtnAddnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAddnewActionPerformed
+        clearForm();
+        formInputMode();
+    }//GEN-LAST:event_jBtnAddnewActionPerformed
+
+    private void jBtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSaveActionPerformed
+        insertKaryawan();
+    }//GEN-LAST:event_jBtnSaveActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JTable JTblKaryawan;
+    private javax.swing.JButton jBtnAddnew;
+    private javax.swing.JButton jBtnCancel;
+    private javax.swing.JButton jBtnDelete;
+    private javax.swing.JButton jBtnSave;
+    private javax.swing.JButton jBtnUpdate;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JComboBox<String> jCMBDept;
+    private javax.swing.JComboBox<String> jCMBPos;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -450,18 +649,19 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
-    private javax.swing.JRadioButton jRadioButton5;
-    private javax.swing.JRadioButton jRadioButton6;
-    private javax.swing.JRadioButton jRadioButton7;
+    private javax.swing.JPanel jPanelMainButtonGroup;
+    private javax.swing.JPanel jPanelSave;
+    private javax.swing.JRadioButton jRBGenderF;
+    private javax.swing.JRadioButton jRBGenderM;
+    private javax.swing.JRadioButton jRBMaritalJD;
+    private javax.swing.JRadioButton jRBMaritalK;
+    private javax.swing.JRadioButton jRBMaritalL;
+    private javax.swing.JRadioButton jRBStatusK;
+    private javax.swing.JRadioButton jRBStatusT;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTxtAddress;
+    private javax.swing.JTextField jTxtEmployeeName;
+    private javax.swing.JTextField jTxtIDPegawai;
+    private javax.swing.JTextField jTxtPhone;
     // End of variables declaration//GEN-END:variables
 }

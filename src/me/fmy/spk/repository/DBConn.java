@@ -31,7 +31,7 @@ public class DBConn {
         
         try {
             String url = "jdbc:mysql://localhost:3306/sisgaji";//nama database yang akan dibuat
-            conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(url,"root","");
             System.out.println("Berhasil Konek ke database");
         } catch (SQLException ex){
             Logger.getLogger(DBConn.class.getName()).log(Level.SEVERE, null, ex);
