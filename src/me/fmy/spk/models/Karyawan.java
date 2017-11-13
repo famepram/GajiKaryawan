@@ -31,9 +31,15 @@ public class Karyawan {
     
     private String status;
     
-    private int dept;
+    private String dept;
     
     private String position;
+    
+    private int GajiPokok;
+    
+    private int TnjTransport;
+    
+    private int TnjLain;
     
     private String createdAt;
     
@@ -124,11 +130,11 @@ public class Karyawan {
         this.status = status;
     }
 
-    public int getDept() {
+    public String getDept() {
         return dept;
     }
 
-    public void setDept(int dept) {
+    public void setDept(String dept) {
         this.dept = dept;
     }
 
@@ -156,6 +162,29 @@ public class Karyawan {
         this.updatedAt = updatedAt;
     }
     
+    public int getGajiPokok(){
+        return this.GajiPokok;
+    }
+    
+    public void setGajiPokok(int GajiPokok){
+        this.GajiPokok = GajiPokok;
+    }
+
+    public int getTnjTransport() {
+        return TnjTransport;
+    }
+
+    public void setTnjTransport(int TnjTransport) {
+        this.TnjTransport = TnjTransport;
+    }
+
+    public int getTnjLain() {
+        return TnjLain;
+    }
+
+    public void setTnjLain(int TnjLain) {
+        this.TnjLain = TnjLain;
+    }
     
     
 }

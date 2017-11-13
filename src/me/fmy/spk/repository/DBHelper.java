@@ -6,7 +6,11 @@
 package me.fmy.spk.repository;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.fmy.spk.models.Karyawan;
@@ -27,6 +31,7 @@ public class DBHelper {
             java.sql.ResultSet result = stmt.executeQuery(sql);
             while (result.next()) {
                 int id              = result.getInt("id");
+                String NIP          = result.getString("NIP");
                 String fullname     = result.getString("fullname");
                 String startWork    = result.getString("start_work");
                 String address      = result.getString("address");
@@ -35,14 +40,16 @@ public class DBHelper {
                 String gender       = result.getString("gender");
                 String marital      = result.getString("marital");
                 String status       = result.getString("status");
-                int dept            = result.getInt("dept");
+                String dept         = result.getString("dept");
                 String position     = result.getString("position");
                 String createdAt    = result.getString("created_at");
                 String updatedAt    = result.getString("updated_at");
                 
                 Karyawan kry = new Karyawan();
                 kry.setId(id);
+                kry.setNIP(NIP);
                 kry.setFullname(fullname);
+                kry.setAddress(address);
                 kry.setStartWork(startWork);
                 kry.setPhone(phone);
                 kry.setDOB(dob);
@@ -61,6 +68,36 @@ public class DBHelper {
         return returns;
     }
     
+    public Karyawan getKrywn(String NIP){
+        Karyawan kry = null;
+        java.sql.Connection conn = new DBConn().connect();
+        String sql = "SELECT * FROM mskaryawan WHERE NIP = '"+NIP+"'";
+        java.sql.Statement stmt;
+        try {
+            stmt = conn.createStatement();
+            java.sql.ResultSet result = stmt.executeQuery(sql);
+            result.next();
+            kry = new Karyawan();
+            kry.setNIP(result.getString("nip"));
+            kry.setFullname(result.getString("fullname"));
+            kry.setStartWork(result.getString("start_work"));
+            kry.setAddress(result.getString("address"));
+            kry.setPhone(result.getString("phone"));
+            kry.setDOB(result.getString("dob"));
+            kry.setGender(result.getString("gender"));
+            kry.setMarital(result.getString("marital"));
+            kry.setStatus(result.getString("status"));
+            kry.setDept(result.getString("dept"));
+            kry.setPosition(result.getString("position"));
+            kry.setGajiPokok(result.getInt("gaji_pokok"));
+            kry.setTnjTransport(result.getInt("tnj_transport"));
+            kry.setTnjLain(result.getInt("tnj_lain"));
+        } catch (SQLException ex){
+            Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return kry;
+    }
+    
     public void insertKaryawan(Karyawan kry){
         java.sql.Connection conn = new DBConn().connect();
         try {
@@ -76,9 +113,12 @@ public class DBHelper {
                         + "status,"
                         + "dept, "
                         + "position,"
+                        + "gaji_pokok,"
+                        + "tnj_transport,"
+                        + "tnj_lain,"
                         + "created_at,"
                         + "updated_at) "
-                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setString(1, kry.getNIP());
             stmt.setString(2, kry.getFullname());
@@ -89,10 +129,15 @@ public class DBHelper {
             stmt.setString(7, kry.getGender());
             stmt.setString(8, kry.getMarital());
             stmt.setString(9, kry.getStatus());
-            stmt.setInt(10, kry.getDept());
+            stmt.setString(10, kry.getDept());
             stmt.setString(11, kry.getPosition());
-            stmt.setString(12, kry.getCreatedAt());
-            stmt.setString(13, kry.getUpdatedAt());
+            stmt.setInt(12, kry.getGajiPokok());
+            stmt.setInt(13, kry.getTnjTransport());
+            stmt.setInt(14, kry.getTnjLain());
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            stmt.setString(15, dateFormat.format(date));
+            stmt.setString(16, dateFormat.format(date));
             stmt.execute();
             stmt.close();
         } catch (SQLException ex) {
