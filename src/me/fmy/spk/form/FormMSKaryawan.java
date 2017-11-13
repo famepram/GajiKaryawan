@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import me.fmy.spk.models.Karyawan;
 import me.fmy.spk.repository.DBHelper;
@@ -30,6 +31,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         mDBHelper = new DBHelper();
         showData();
         formViewMode();
+        jTxtID.setVisible(false);
         //setupComboJabatan();
     }
     
@@ -184,15 +186,121 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         showData();
     }
     
+    private void updateKaryawan(){
+        int id = Integer.parseInt(jTxtID.getText());
+        Karyawan kry = mDBHelper.getKrywnByID(id);
+        String NIP          = jTxtIDPegawai.getText();
+        String fullname     = jTxtEmployeeName.getText();
+        String phone        = jTxtPhone.getText();
+        String address      = jTxtAddress.getText();
+        String dept         = jCMBDept.getSelectedItem().toString();
+        String pos          = jCMBPos.getSelectedItem().toString();
+        String DOB          = jTxtDOB.getText();
+        String startwork    = jTxtWorkStart.getText();
+        int gajiPokok       = Integer.parseInt(jTxtGapok.getText());
+        int tnjTrans        = Integer.parseInt(jTxtTnjTrans.getText());
+        int tnjlain         = Integer.parseInt(jTxtTnjLain.getText());
+        
+        String Gender;
+        if(jRBGenderM.isSelected()){
+            Gender = "Pria";
+        } else if(jRBGenderF.isSelected()){
+            Gender = "Wanita";
+        } else {
+            Gender = "Pria";
+        }
+        
+        String Marital;
+        if(jRBMaritalK.isSelected()){
+            Marital = "Kawin";
+        } else if(jRBMaritalL.isSelected()){
+            Marital = "Single";
+        } else if(jRBMaritalJD.isSelected()){
+            Marital = "Janda / Duda";
+        } else {
+            Marital = "Single";
+        }
+        
+        String Status;
+        if(jRBStatusK.isSelected()){
+            Status = "Tetap";
+        } else if(jRBStatusT.isSelected()){
+            Status = "Kontrak";
+        } else {
+            Status = "Tetap";
+        }
+        
+        kry.setNIP(NIP);
+        kry.setFullname(fullname);
+        kry.setStartWork(startwork);
+        kry.setDOB(DOB);
+        kry.setAddress(address);
+        kry.setPhone(phone);
+        kry.setGender(Gender);
+        kry.setMarital(Marital);
+        kry.setStatus(Status);
+        kry.setDept(dept);
+        kry.setPosition(pos);
+        kry.setGajiPokok(gajiPokok);
+        kry.setTnjTransport(tnjTrans);
+        kry.setTnjLain(tnjlain);
+        mDBHelper.updateKaryawan(kry);
+        clearForm();
+        formViewMode();
+        tblModel.fireTableDataChanged();
+        showData();
+    }
+    
     private void prepareUpdate(){
         int column = 0;
-        int row = JTblKaryawan.getSelectedRow();
-        String nip = JTblKaryawan.getModel().getValueAt(row, column).toString();
+        int row     = JTblKaryawan.getSelectedRow();
+        String nip  = JTblKaryawan.getModel().getValueAt(row, column).toString();
         Karyawan kry = mDBHelper.getKrywn(nip);
         if(kry != null){
-           
-        } else {
+            jTxtID.setText(String.valueOf(kry.getId()));
+            jTxtIDPegawai.setText(kry.getNIP());
+            jTxtAddress.setText(kry.getAddress());
+            jTxtEmployeeName.setText(kry.getFullname());
+            jTxtPhone.setText(kry.getPhone());
+            jTxtGapok.setText(String.valueOf(kry.getGajiPokok()));
+            jTxtTnjTrans.setText(String.valueOf(kry.getTnjTransport()));
+            jTxtTnjLain.setText(String.valueOf(kry.getTnjLain()));
+            jTxtWorkStart.setText(kry.getStartWork());
+            jTxtDOB.setText(kry.getDOB());
+            jCMBDept.setSelectedItem(kry.getDept());
+            jCMBPos.setSelectedItem(kry.getPosition());
             
+            if(kry.getGender().equals("Pria")){
+                jRBGenderM.setSelected(true);
+                jRBGenderF.setSelected(false);
+            } else {
+                jRBGenderF.setSelected(true);
+                jRBGenderM.setSelected(false);
+            }
+            
+            if(kry.getMarital().equals("Single")){
+                jRBMaritalL.setSelected(true);
+                jRBMaritalK.setSelected(false);
+                jRBMaritalJD.setSelected(false);
+            } else if(kry.getMarital().equals("Kawin")){
+                jRBMaritalL.setSelected(false);
+                jRBMaritalK.setSelected(true);
+                jRBMaritalJD.setSelected(false);
+            } else {
+                jRBMaritalL.setSelected(false);
+                jRBMaritalK.setSelected(false);
+                jRBMaritalJD.setSelected(true);
+            }
+            
+            if(kry.getStatus().equals("Kontrak")){
+                jRBStatusT.setSelected(false);
+                jRBStatusK.setSelected(true);
+            } else {
+                jRBStatusT.setSelected(true);
+                jRBStatusK.setSelected(false);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Karyawan not found.");
         }
     }
 
@@ -223,6 +331,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         jRBMaritalK = new javax.swing.JRadioButton();
         jRBMaritalJD = new javax.swing.JRadioButton();
         jLabel9 = new javax.swing.JLabel();
+        jTxtID = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         JTblKaryawan = new javax.swing.JTable();
@@ -347,33 +456,36 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(30, 30, 30)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7))
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(jRBGenderM)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jRBGenderF))
-                                .addComponent(jTxtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel11)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel6)
+                                    .addComponent(jLabel7))
+                                .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addComponent(jLabel4))
-                            .addGap(18, 18, 18)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jTxtEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTxtDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTxtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jRBGenderM)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jRBGenderF))
+                                    .addComponent(jTxtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                    .addComponent(jLabel4))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTxtEmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtDOB, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTxtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTxtID, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -383,14 +495,16 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                         .addComponent(jRBMaritalK)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jRBMaritalJD)))
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(23, 23, 23))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTxtIDPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTxtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)))
@@ -797,12 +911,19 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jBtnCancelActionPerformed
 
     private void jBtnAddnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnAddnewActionPerformed
+        jTxtID.setText("");
         clearForm();
         formInputMode();
+        
     }//GEN-LAST:event_jBtnAddnewActionPerformed
 
     private void jBtnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnSaveActionPerformed
-        insertKaryawan();
+        if(jTxtID.getText().equals("")){
+            insertKaryawan();
+        } else {
+            updateKaryawan();
+        }
+        
     }//GEN-LAST:event_jBtnSaveActionPerformed
 
     private void jTxtDOBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTxtDOBActionPerformed
@@ -827,6 +948,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
 
     private void jBtnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnUpdateActionPerformed
         prepareUpdate();
+        formInputMode();
     }//GEN-LAST:event_jBtnUpdateActionPerformed
 
 
@@ -872,6 +994,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
     private javax.swing.JFormattedTextField jTxtDOB;
     private javax.swing.JTextField jTxtEmployeeName;
     private javax.swing.JTextField jTxtGapok;
+    private javax.swing.JTextField jTxtID;
     private javax.swing.JTextField jTxtIDPegawai;
     private javax.swing.JTextField jTxtPhone;
     private javax.swing.JTextField jTxtTnjLain;
