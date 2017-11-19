@@ -222,4 +222,17 @@ public class DBHelper {
             Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void deleteKaryawan(String nip){
+        java.sql.Connection conn = new DBConn().connect();
+        try {
+            String sql = "DELETE FROM mskaryawan WHERE nip=?";
+            java.sql.PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, nip);
+            stmt.execute();
+            stmt.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBHelper.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

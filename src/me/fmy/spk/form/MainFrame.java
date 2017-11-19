@@ -33,11 +33,8 @@ public class MainFrame extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
-        jMenuItem2 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
+        jMenuItemSlipGaji = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -58,7 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jMenu1.setText("Master");
 
-        jMenuItem1.setText("Master Jabatan");
+        jMenuItem1.setText("Master Karyawan");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -66,33 +63,19 @@ public class MainFrame extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem1);
 
-        jMenuItem2.setText("Master Karyawan");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
-            }
-        });
-        jMenu1.add(jMenuItem2);
-
         jMenuBar1.add(jMenu1);
 
         jMenu3.setText("Transaksi");
 
-        jMenuItem3.setText("Potongan");
-        jMenu3.add(jMenuItem3);
-
-        jMenuItem4.setText("Lembur");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemSlipGaji.setText("Slip Gaji Karyawan");
+        jMenuItemSlipGaji.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
+                jMenuItemSlipGajiActionPerformed(evt);
             }
         });
-        jMenu3.add(jMenuItem4);
+        jMenu3.add(jMenuItemSlipGaji);
 
         jMenuBar1.add(jMenu3);
-
-        jMenu4.setText("Laporan");
-        jMenuBar1.add(jMenu4);
 
         jMenu5.setText("Keluar");
         jMenuBar1.add(jMenu5);
@@ -115,20 +98,18 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+        
         FormMSKaryawan fmsK = new FormMSKaryawan();
         jDesktopPane1.add(fmsK);
         fmsK.setVisible(true);
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
-    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem4ActionPerformed
-
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    private void jMenuItemSlipGajiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSlipGajiActionPerformed
+        FormSlipGajiFrame fsg = new FormSlipGajiFrame();
+        jDesktopPane1.add(fsg);
+        fsg.setVisible(true);
+    }//GEN-LAST:event_jMenuItemSlipGajiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -169,12 +150,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItemSlipGaji;
     // End of variables declaration//GEN-END:variables
 }

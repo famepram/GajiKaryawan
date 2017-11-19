@@ -251,6 +251,11 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         showData();
     }
     
+    private void deleteKaryawan(String nip){
+        mDBHelper.deleteKaryawan(nip);
+        showData();
+    }
+    
     private void prepareUpdate(){
         int column = 0;
         int row     = JTblKaryawan.getSelectedRow();
@@ -352,7 +357,6 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         jBtnAddnew = new javax.swing.JButton();
         jBtnUpdate = new javax.swing.JButton();
         jBtnDelete = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel13 = new javax.swing.JLabel();
         jTxtGapok = new javax.swing.JTextField();
@@ -360,6 +364,8 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         jTxtTnjTrans = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jTxtTnjLain = new javax.swing.JTextField();
+
+        setClosable(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -718,8 +724,11 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         });
 
         jBtnDelete.setText("Hapus");
-
-        jButton5.setText("Keluar");
+        jBtnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBtnDeleteActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanelMainButtonGroupLayout = new javax.swing.GroupLayout(jPanelMainButtonGroup);
         jPanelMainButtonGroup.setLayout(jPanelMainButtonGroupLayout);
@@ -732,9 +741,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                 .addComponent(jBtnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jBtnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(469, Short.MAX_VALUE))
         );
         jPanelMainButtonGroupLayout.setVerticalGroup(
             jPanelMainButtonGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -743,8 +750,7 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
                 .addGroup(jPanelMainButtonGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jBtnAddnew)
                     .addComponent(jBtnUpdate)
-                    .addComponent(jBtnDelete)
-                    .addComponent(jButton5))
+                    .addComponent(jBtnDelete))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -951,6 +957,24 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
         formInputMode();
     }//GEN-LAST:event_jBtnUpdateActionPerformed
 
+    private void jBtnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBtnDeleteActionPerformed
+        String nip;
+        int column  = 0;
+        int row     = JTblKaryawan.getSelectedRow();
+        if(row != -1){
+            nip = JTblKaryawan.getModel().getValueAt(row, column).toString();
+            int dialogButton = JOptionPane.YES_NO_OPTION;
+            int dialogResult = JOptionPane.showConfirmDialog (null, "Apakah anda akan menghapus data karyawan ini?","Konfirmasi Hapus",dialogButton);
+            if(dialogResult == JOptionPane.YES_OPTION){
+                deleteKaryawan(nip);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Pilih karyawan terlebih dahulu!");
+        }
+        
+        
+    }//GEN-LAST:event_jBtnDeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable JTblKaryawan;
@@ -959,7 +983,6 @@ public class FormMSKaryawan extends javax.swing.JInternalFrame {
     private javax.swing.JButton jBtnDelete;
     private javax.swing.JButton jBtnSave;
     private javax.swing.JButton jBtnUpdate;
-    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox<String> jCMBDept;
     private javax.swing.JComboBox<String> jCMBPos;
     private javax.swing.JLabel jLabel10;
